@@ -11,52 +11,40 @@ public class Character : MonoBehaviour
     [SerializeField] float m_movingTurnSpeed = 360f;
     [SerializeField] float m_stationaryTurnSpeed = 180f;
     [SerializeField] float m_groundCheckDistance = 0.2f;
+    [SerializeField] float m_gravityMultiplier = 1f;
+    [SerializeField] float m_animSpeedMultiplier = 1f;
 
     Rigidbody m_rigidbody;
-    CapsuleCollider m_capsuleCollider;
     Animator m_animator;
 
     bool m_moving = false;
     bool m_grounded = true;
     Vector3 m_groundNormal = Vector3.up;
-    Vector3 m_movingCommand = Vector3.zero;
-    Vector3 m_movingSpeed = Vector3.zero;
     float m_turnAmount = 0;
     float m_forwardAmount = 0;
 
     void Awake ()
     {
         m_rigidbody = GetComponent<Rigidbody>();
-        m_capsuleCollider = GetComponent<CapsuleCollider>();
         m_animator = GetComponent<Animator>();
 
         m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    public void move(Vector2 move)
-    {/*
+    public void move(Vector3 move)
+    {
         move = transform.InverseTransformDirection(move);
         checkGroundStatus();
         move = Vector3.ProjectOnPlane(move, m_groundNormal);
-        m_turnAmount = Mathf.Atan2(move.x, move.y);
-        m_forwardAmount = move.y;
+        m_turnAmount = Mathf.Atan2(move.x, move.z);
+        m_forwardAmount = move.z;
 
         applyExtraTurnRotation();
         
-        if (m_grounded)
-        {
-            HandleGroundedMovement(crouch, jump);
-        }
-        else
-        {
-            HandleAirborneMovement();
-        }
+        if (!m_grounded)
+            handleAirborneMovement();
 
-        ScaleCapsuleForCrouching(crouch);
-        PreventStandingInLowHeadroom();
-
-        // send input and other state parameters to the animator
-        UpdateAnimator(move);*/
+        updateAnimator(move);
     }
 
     public bool moving { get { return m_moving; } }
@@ -83,9 +71,39 @@ public class Character : MonoBehaviour
 
     void applyExtraTurnRotation()
     {
-        /*// help the character turn faster (this is in addition to root rotation in the animation)
-        float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, m_ForwardAmount);
-        transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);*/
+        float turnSpeed = Mathf.Lerp(m_stationaryTurnSpeed, m_movingTurnSpeed, m_forwardAmount);
+        transform.Rotate(0, m_turnAmount * turnSpeed * Time.deltaTime, 0);
+    }
+    
+    void handleAirborneMovement()
+    {
+        Vector3 extraGravityForce = (Physics.gravity * m_gravityMultiplier) - Physics.gravity;
+        m_rigidbody.AddForce(extraGravityForce);
     }
 
+    void updateAnimator(Vector3 move)
+    {
+        m_animator.SetFloat("Forward", m_forwardAmount, 0.1f, Time.deltaTime);
+        m_animator.SetFloat("Turn", m_turnAmount, 0.1f, Time.deltaTime);
+        m_animator.SetBool("OnGround", m_grounded);
+        if (!m_grounded)
+        {
+            m_animator.SetFloat("Jump", m_rigidbody.velocity.y);
+        }
+    
+        if (m_grounded && move.magnitude > 0)
+            m_animator.speed = m_animSpeedMultiplier;
+        else
+            m_animator.speed = 1;
+    }
+
+    public void OnAnimatorMove()
+    {
+        if (m_grounded && Time.deltaTime > 0)
+        {
+            Vector3 v = (m_animator.deltaPosition * m_moveSpeed) / Time.deltaTime;
+            v.y = m_rigidbody.velocity.y;
+            m_rigidbody.velocity = v;
+        }
+    }
 }

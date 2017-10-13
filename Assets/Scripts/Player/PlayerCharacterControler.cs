@@ -22,8 +22,8 @@ class PlayerCharacterControler : MonoBehaviour
         var camDir = m_cameraTransform.forward;
         var camDir2D = new Vector2(camDir.x, camDir.z).normalized;
         var camDir2DOthro = new Vector2(camDir2D.y, -camDir2D.x);
-        dir = dir.x * camDir2D + dir.y * camDir2DOthro;
+        dir = dir.y * camDir2D + dir.x * camDir2DOthro;
 
-        m_character.move(dir);
+        m_character.move(new Vector3(dir.x, 0, dir.y));
     }
 }
