@@ -9,16 +9,16 @@ public class CardLogic : MonoBehaviour
     [Tooltip("Showed when the card is selected")]
     [SerializeField] string m_description = "";
 
-    bool m_selected = false;
+    bool m_hovered = false;
     Outline m_outlineComp = null;
     Text m_textComp = null;
 
-    public bool selected
+    public bool hovered
     {
-        get { return m_selected; }
+        get { return m_hovered; }
         set
         {
-            m_selected = value;
+            m_hovered = value;
             if (m_outlineComp != null)
                 m_outlineComp.enabled = value;
         }
@@ -44,7 +44,7 @@ public class CardLogic : MonoBehaviour
 	void Awake()
     {
         m_outlineComp = transform.Find("Visual").GetComponent<Outline>();
-        m_outlineComp.enabled = m_selected;
+        m_outlineComp.enabled = m_hovered;
         m_textComp = transform.Find("Text").GetComponent<Text>();
         m_textComp.text = m_text;
 	}

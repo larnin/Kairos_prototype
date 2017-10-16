@@ -6,7 +6,7 @@ using UnityEngine;
 
 class InventoryFillLogic : MonoBehaviour
 {
-    [SerializeField] List<CardData> m_cards = new List<CardData>();
+    [SerializeField] CardData[] m_cards = new CardData[] { };
 
     private void Awake()
     {

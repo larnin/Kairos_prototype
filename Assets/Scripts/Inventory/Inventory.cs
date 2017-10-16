@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 [Serializable]
-public struct CardData
+public class CardData
 {
     public CardData(string _name, string _description)
     {
