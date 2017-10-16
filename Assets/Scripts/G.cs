@@ -2,6 +2,7 @@
 public sealed class G
 {
     private static volatile G m_instance;
+    private Inventory m_inventory = new Inventory();
 
     public static G sys
     {
@@ -11,5 +12,10 @@ public sealed class G
                 G.m_instance = new G();
             return G.m_instance;
         }
+    }
+
+    public Inventory inventory
+    {
+        get { return m_inventory; }
     }
 }
