@@ -30,8 +30,8 @@ public class ExamineObjectHidden : MonoBehaviour
 
     private Camera m_camera;
 
-    private const string m_horizontalInputName = "CursorHorizontal";
-    private const string m_VerticalInputName = "CursorVertical";
+    private const string m_horizontalInputName = "Horizontal";
+    private const string m_VerticalInputName = "Vertical";
     private const string m_CancelInputName = "Cancel";
     private const string m_AcceptInputName = "CursorClickButton";
 
@@ -56,7 +56,7 @@ public class ExamineObjectHidden : MonoBehaviour
             // rotate Object
             float horizontalInputValue = Input.GetAxis(m_horizontalInputName);
             float verticalInputValue = Input.GetAxis(m_VerticalInputName);
-            m_examinedObjectTransform.Rotate(-transform.right, verticalInputValue * m_rotationSpeed * Time.deltaTime, Space.World);
+            m_examinedObjectTransform.Rotate(transform.right, verticalInputValue * m_rotationSpeed * Time.deltaTime, Space.World);
             m_examinedObjectTransform.Rotate(-transform.up, horizontalInputValue * m_rotationSpeed * Time.deltaTime, Space.World);
 
             // exit
@@ -80,6 +80,8 @@ public class ExamineObjectHidden : MonoBehaviour
                     {
                         m_hiddenObjectDescription.isDiscovered = true;
                         UpdateDescriptiveText(true);
+                        m_UIDescriptiveAcceptButton.SetActive(true);
+                        m_UIDescriptiveAcceptButton.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Obtenir la carte";
                     }
                 }
 
@@ -87,6 +89,7 @@ public class ExamineObjectHidden : MonoBehaviour
                 if(Input.GetButtonDown(m_AcceptInputName) && m_hiddenObjectDescription.isDiscovered && ! m_hiddenObjectDescription.isCardObtained)
                 {
                     m_hiddenObjectDescription.isCardObtained = true;
+                    m_UIDescriptiveAcceptButton.SetActive(false);
                     Event<CardObtainedEvent>.Broadcast(new CardObtainedEvent(m_hiddenObjectDescription.m_CardName, m_hiddenObjectDescription.m_specialDescription));
                 }
             }
@@ -115,9 +118,16 @@ public class ExamineObjectHidden : MonoBehaviour
     {
         m_UIDescriptiveText.SetActive(true);
         UpdateDescriptiveText(m_hiddenObjectDescription.isDiscovered);
-
         m_isObjectMovingToSnapPoint = false;
-        m_UIDescriptiveAcceptButton.SetActive(false);
+
+        // if we can obtain a "card" update the UI.
+        if (m_hiddenObjectDescription.isDiscovered && ! m_hiddenObjectDescription.isCardObtained)
+        {
+            m_UIDescriptiveAcceptButton.SetActive(true);
+            m_UIDescriptiveAcceptButton.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Obtenir la carte";
+        }
+        
+
     }
 
     private void UpdateDescriptiveText(bool isDiscovered)
@@ -135,5 +145,6 @@ public class ExamineObjectHidden : MonoBehaviour
         m_cursor.SetActive(true);
         m_cursor.GetComponent<CursorLogic>().highlightObject(true);
         m_UIDescriptiveAcceptButton.SetActive(true);
+        m_UIDescriptiveAcceptButton.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Selectionner un objet";
     }
 }

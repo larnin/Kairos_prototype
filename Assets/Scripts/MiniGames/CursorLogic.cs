@@ -19,8 +19,8 @@ public class CursorLogic : MonoBehaviour
     private const float m_rayDistance = 100.0f;
     private GameObject m_currentObjecthighlighted = null;
 
-    private const string m_horizontalInputName = "CursorHorizontal";
-    private const string m_VerticalInputName = "CursorVertical";
+    private const string m_horizontalInputName = "Horizontal";
+    private const string m_VerticalInputName = "Vertical";
     private const string m_CursorClickInputName = "CursorClickButton";
 
     // Use this for initialization
@@ -39,7 +39,7 @@ public class CursorLogic : MonoBehaviour
         // move cursor
         if (HorizontalInputValue != 0 || VerticalInputValue != 0)
         {
-            Vector3 newScreenPosition = currentScreenPosition + (new Vector3(HorizontalInputValue, -VerticalInputValue)) * m_speed * Time.deltaTime;
+            Vector3 newScreenPosition = currentScreenPosition + (new Vector3(HorizontalInputValue, VerticalInputValue)) * m_speed * Time.deltaTime;
 
             newScreenPosition.x = Mathf.Clamp(newScreenPosition.x, 0f + m_borderOffset, Screen.width - m_borderOffset);
             newScreenPosition.y = Mathf.Clamp(newScreenPosition.y, 0f + m_borderOffset, Screen.height - m_borderOffset);
