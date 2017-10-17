@@ -1,8 +1,11 @@
 ﻿
+using UnityEngine;
+
 public sealed class G
 {
     private static volatile G m_instance;
     private Inventory m_inventory = new Inventory();
+
 
     public static G sys
     {
