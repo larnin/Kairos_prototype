@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardLogic : MonoBehaviour
+public class CardLogic : Interactable
 {
     [SerializeField] string m_text = "Name";
     [Tooltip("Showed when the card is selected")]
     [SerializeField] string m_description = "";
 
+    Color selectedColor = new Color(0, 1, 0);
+    Color hoveredColor = new Color(1, 0.5f, 0);
+
     bool m_hovered = false;
+    bool m_selected = false;
     Outline m_outlineComp = null;
     Text m_textComp = null;
 
@@ -19,8 +23,11 @@ public class CardLogic : MonoBehaviour
         set
         {
             m_hovered = value;
-            if (m_outlineComp != null)
+            if (m_outlineComp != null && m_selected == false)
+            {
                 m_outlineComp.enabled = value;
+                m_outlineComp.effectColor = hoveredColor;
+            }
         }
     }
 
@@ -35,15 +42,42 @@ public class CardLogic : MonoBehaviour
         }
     }
 
+    public void selected(bool value)
+    {
+        m_selected = value;
+        if (m_outlineComp != null)
+        {
+            m_outlineComp.enabled = value;
+            m_outlineComp.effectColor = selectedColor;
+        }
+
+        Event<SelectCardEvent>.Broadcast(new SelectCardEvent(this));
+    }
+
     public string description
     {
         get { return m_description; }
         set { m_description = value; }
     }
 
-	void Awake()
+    public override void hoverEnter()
     {
-        m_outlineComp = transform.Find("Visual").GetComponent<Outline>();
+        hovered = true;
+    }
+
+    public override void hoverExit()
+    {
+        hovered = false;
+    }
+
+    public override void select()
+    {
+        selected(true);
+    }
+
+    void Awake()
+    {
+        m_outlineComp = GetComponent<Outline>();
         m_outlineComp.enabled = m_hovered;
         m_textComp = transform.Find("Text").GetComponent<Text>();
         m_textComp.text = m_text;

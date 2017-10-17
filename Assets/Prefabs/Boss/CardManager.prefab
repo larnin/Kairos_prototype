@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 867c00c6854bf9449a1dfe6c22caed94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_cardTemplate: {fileID: 1828323043297864, guid: 372d2999027ce554286680973a5f4d3d,
+  m_cardTemplate: {fileID: 1305287819968820, guid: fc45b94da5a1a8d49b2d8c6928222bd6,
     type: 2}
   m_bossTextTemplate: {fileID: 1561593057464974, guid: d895a53543e8c63469c7f50cb73eb322,
     type: 2}

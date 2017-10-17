@@ -35,7 +35,7 @@ public class CardManagerLogic : MonoBehaviour
     {
         m_descriptionComp = transform.Find("Description").GetComponent<Text>();
 
-        m_subscriberList.Add(new Event<InputEvent>.Subscriber(onInputEvent));
+        //m_subscriberList.Add(new Event<InputEvent>.Subscriber(onInputEvent));
         m_subscriberList.Add(new Event<FillCardsEvent>.Subscriber(onFillCards));
         m_subscriberList.Add(new Event<ShowBossSentensesEvent>.Subscriber(onBossSentensesShow));
         m_subscriberList.Add(new Event<HideSentensesAndCardsEvent>.Subscriber(onHideCardsAndSentenses));

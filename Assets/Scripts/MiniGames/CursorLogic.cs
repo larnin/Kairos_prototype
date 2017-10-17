@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CursorLogic : MonoBehaviour
 {
@@ -10,33 +11,49 @@ public class CursorLogic : MonoBehaviour
     private int m_borderOffset = 50;
     [SerializeField]
     private LayerMask m_layerMask;
-
-    [SerializeField]
-    private Color m_highlightColor;
-    private Color m_baseColor;
     
-    private Camera m_camera;
     private const float m_rayDistance = 100.0f;
-    private GameObject m_currentObjecthighlighted = null;
 
     private const string m_horizontalInputName = "Horizontal";
     private const string m_VerticalInputName = "Vertical";
-    private const string m_CursorClickInputName = "CursorClickButton";
+    private const string m_CursorClickInputName = "Fire1";
 
-    // Use this for initialization
-    void Start()
+    private Interactable m_hoveredInteractable = null;
+
+    private Camera m_camera;
+
+    private void Awake()
     {
         m_camera = Camera.main;
     }
-
-    // Update is called once per frame
+    
     void Update()
+    {
+        moveCursor();
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        PointerEventData ped = new PointerEventData(EventSystem.current);
+        ped.position = transform.position;
+        EventSystem.current.RaycastAll(ped, raycastResults);
+
+        if (raycastResults.Count != 0)
+            onRaycastUI(raycastResults);
+        else
+        {
+            Ray ray = m_camera.ScreenPointToRay(transform.position);
+            RaycastHit HitInfo;
+            if (Physics.Raycast(ray, out HitInfo, m_rayDistance, m_layerMask))
+                changeCurrentInteractable(HitInfo.transform.GetComponent<Interactable>());
+            else changeCurrentInteractable(null);
+        }
+    }
+    
+    void moveCursor()
     {
         float HorizontalInputValue = Input.GetAxis(m_horizontalInputName);
         float VerticalInputValue = Input.GetAxis(m_VerticalInputName);
         Vector3 currentScreenPosition = transform.position;
         
-        // move cursor
         if (HorizontalInputValue != 0 || VerticalInputValue != 0)
         {
             Vector3 newScreenPosition = currentScreenPosition + (new Vector3(HorizontalInputValue, VerticalInputValue)) * m_speed * Time.deltaTime;
@@ -46,46 +63,46 @@ public class CursorLogic : MonoBehaviour
 
             transform.position = newScreenPosition;
         }
-
-        // highlight object
-        Ray ray = m_camera.ScreenPointToRay(currentScreenPosition);
-        RaycastHit HitInfo;
-
-        if( Physics.Raycast(ray,out HitInfo, m_rayDistance, m_layerMask) )
-        {
-            GameObject gameObjectTouched = HitInfo.collider.gameObject;
-
-            if (m_currentObjecthighlighted != gameObjectTouched) 
-            {
-                m_currentObjecthighlighted = gameObjectTouched;
-                highlightObject(true);
-            }
-        }
-        else if(m_currentObjecthighlighted)
-        {
-            highlightObject(false);
-            m_currentObjecthighlighted = null;
-        }
-
-        // send event OnCursorClick
-        if(Input.GetButtonDown(m_CursorClickInputName))
-        {
-           if( m_currentObjecthighlighted)
-           {
-                highlightObject(false);
-                Event<CursorClickEvent>.Broadcast(new CursorClickEvent(m_currentObjecthighlighted, this));
-            }
-        }
     }
 
-    public void highlightObject(bool isEntering)
+    void onRaycastUI(List<RaycastResult> raycastResults)
     {
-        Material material = m_currentObjecthighlighted.GetComponent<Renderer>().material;
-
-        if (isEntering)
+        float bestDist = float.MaxValue;
+        Interactable bestinteractable = null;
+        foreach (var r in raycastResults)
         {
-            m_baseColor = material.color;
+            if (r.distance >= bestDist)
+                continue;
+            if ((m_layerMask.value & (1 << r.gameObject.layer)) == 0)
+                continue;
+            var interactable = r.gameObject.GetComponent<Interactable>();
+            if (interactable == null)
+                continue;
+            bestDist = r.distance;
+            bestinteractable = interactable;
         }
-        material.color = isEntering ? m_highlightColor : m_baseColor;
+
+        changeCurrentInteractable(bestinteractable);
+    }
+
+    void changeCurrentInteractable(Interactable interactable)
+    {
+        if (m_hoveredInteractable != null)
+        {
+            if (m_hoveredInteractable != interactable)
+            {
+                m_hoveredInteractable.hoverExit();
+                if (interactable != null)
+                    interactable.hoverEnter();
+                m_hoveredInteractable = interactable;
+            }
+            if (m_hoveredInteractable != null && Input.GetButtonDown(m_CursorClickInputName))
+                    m_hoveredInteractable.select();
+        }
+        else if (interactable != null)
+        {
+            interactable.hoverEnter();
+            m_hoveredInteractable = interactable;
+        }
     }
 }
