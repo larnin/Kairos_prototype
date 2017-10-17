@@ -38,6 +38,7 @@ public class CardManagerLogic : MonoBehaviour
         m_subscriberList.Add(new Event<InputEvent>.Subscriber(onInputEvent));
         m_subscriberList.Add(new Event<FillCardsEvent>.Subscriber(onFillCards));
         m_subscriberList.Add(new Event<ShowBossSentensesEvent>.Subscriber(onBossSentensesShow));
+        m_subscriberList.Add(new Event<HideSentensesAndCardsEvent>.Subscriber(onHideCardsAndSentenses));
         m_subscriberList.Subscribe();
     }
 
@@ -48,7 +49,7 @@ public class CardManagerLogic : MonoBehaviour
 
     private void Start()
     {
-        showCards(G.sys.inventory);
+        /*showCards(G.sys.inventory);
         showSentenses(new List<string>
         {
             "1, 2, 3 ...",
@@ -56,7 +57,7 @@ public class CardManagerLogic : MonoBehaviour
             "Un fruit jaune et long",
             "Le president des etats unis",
             "Un doux kiwi"
-        });
+        });*/
     }
 
     void showCards(List<CardData> cards)
@@ -162,13 +163,19 @@ public class CardManagerLogic : MonoBehaviour
             {
                 if(!m_cardSelected)
                 {
-                    m_cardSelected = true;
-                    hoverSentense(0);
+                    if (m_cards.Count > 0)
+                    {
+                        m_cardSelected = true;
+                        hoverSentense(0);
+                    }
                 }
                 else if(!m_sentenseSelected)
                 {
-                    m_sentenseSelected = true;
-                    Event<CardAndSentenseSelectedEvent>.Broadcast(new CardAndSentenseSelectedEvent(m_cards[m_hoveredCardIndex].text, m_bossText[m_hoveredSentenseIndex].text, m_hoveredCardIndex, m_hoveredSentenseIndex));
+                    if(m_bossText.Count > 0)
+                    {
+                        m_sentenseSelected = true;
+                        Event<CardAndSentenseSelectedEvent>.Broadcast(new CardAndSentenseSelectedEvent(m_cards[m_hoveredCardIndex].text, m_bossText[m_hoveredSentenseIndex].text, m_hoveredCardIndex, m_hoveredSentenseIndex));
+                    }
                 }
             }
             else if(e.inputName == abortButtonName)
@@ -192,6 +199,20 @@ public class CardManagerLogic : MonoBehaviour
     void onBossSentensesShow(ShowBossSentensesEvent e)
     {
         showSentenses(e.sentenses);
+    }
+
+    void onHideCardsAndSentenses(HideSentensesAndCardsEvent e)
+    {
+        foreach (var c in m_cards)
+            Destroy(c.gameObject);
+        m_cards.Clear();
+
+        foreach (var s in m_bossText)
+            Destroy(s.gameObject);
+        m_bossText.Clear();
+
+        m_hoveredCardIndex = -1;
+        m_hoveredSentenseIndex = -1;
     }
 
     private float heightFromIndex(int value, int max)
