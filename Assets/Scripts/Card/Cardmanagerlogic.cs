@@ -9,6 +9,7 @@ public class CardManagerLogic : MonoBehaviour
 {
     const string horisontalAxisName = "Horizontal";
     const string selectButtonName = "Fire1";
+    const string abortButtonName = "Fire2";
 
     [SerializeField] GameObject m_cardTemplate;
     [SerializeField] GameObject m_bossTextTemplate;
@@ -24,6 +25,9 @@ public class CardManagerLogic : MonoBehaviour
     Text m_descriptionComp = null;
 
     int m_hoveredCardIndex = 0;
+    int m_hoveredSentenseIndex = -1;
+    bool m_cardSelected = false;
+    bool m_sentenseSelected = false;
 
     SubscriberList m_subscriberList = new SubscriberList();
 
@@ -79,6 +83,9 @@ public class CardManagerLogic : MonoBehaviour
             m_cards.Add(cardlogic);
         }
 
+        m_cardSelected = false;
+        m_sentenseSelected = false;
+
         hoverCard(0);
     }
 
@@ -121,12 +128,60 @@ public class CardManagerLogic : MonoBehaviour
         m_hoveredCardIndex = index;
     }
 
+    void hoverSentense(int index)
+    {
+        foreach (var s in m_bossText)
+            s.hovered = false;
+
+        if (index < 0 || index >= m_bossText.Count)
+        {
+            m_hoveredSentenseIndex = -1;
+            return;
+        }
+
+        m_bossText[index].hovered = true;
+        m_hoveredSentenseIndex = index;
+    }
+
     void onInputEvent(InputEvent e)
     {
-        if (e.inputType != InputEvent.InputType.PRESSED || e.inputName != horisontalAxisName)
-            return;
+        if (e.inputType == InputEvent.InputType.PRESSED)
+        {
+            if (e.inputName == horisontalAxisName)
+            {
+                if (!m_cardSelected)
+                    hoverCard(Mathf.Clamp(m_hoveredCardIndex + e.inputSign, 0, m_cards.Count - 1));
+                else if (!m_sentenseSelected)
+                    hoverSentense(Mathf.Clamp(m_hoveredSentenseIndex + e.inputSign, 0, m_bossText.Count - 1));
+            }
+        }
 
-        hoverCard(Mathf.Clamp(m_hoveredCardIndex + e.inputSign, 0, m_cards.Count - 1));
+        if(e.inputType == InputEvent.InputType.RELEASED)
+        {
+            if(e.inputName == selectButtonName)
+            {
+                if(!m_cardSelected)
+                {
+                    m_cardSelected = true;
+                    hoverSentense(0);
+                }
+                else if(!m_sentenseSelected)
+                {
+                    m_sentenseSelected = true;
+                    Event<CardAndSentenseSelectedEvent>.Broadcast(new CardAndSentenseSelectedEvent(m_cards[m_hoveredCardIndex].text, m_bossText[m_hoveredSentenseIndex].text, m_hoveredCardIndex, m_hoveredSentenseIndex));
+                }
+            }
+            else if(e.inputName == abortButtonName)
+            {
+                if (m_sentenseSelected)
+                    return;
+                if(m_cardSelected)
+                {
+                    m_cardSelected = false;
+                    hoverSentense(-1);
+                }
+            }
+        }
     }
 
     void onFillCards(FillCardsEvent e)

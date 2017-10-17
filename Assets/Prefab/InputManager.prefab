@@ -54,4 +54,6 @@ MonoBehaviour:
   m_inputsNames:
   - Horizontal
   - Vertical
+  - Fire1
+  - Fire2
   m_treshold: 0.5

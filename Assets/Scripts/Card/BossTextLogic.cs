@@ -9,8 +9,8 @@ public class BossTextLogic : MonoBehaviour
 {
     [SerializeField] string m_text = "Name";
 
-    Color m_selectedColor = new Color(255, 128, 0);
-    Color m_basicColor = new Color(255, 255, 255);
+    Color m_selectedColor = new Color(1, 0.5f, 0);
+    Color m_basicColor = new Color(1, 1, 1);
 
     bool m_hovered = false;
     Text m_textComp = null;
