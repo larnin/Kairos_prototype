@@ -22,7 +22,7 @@ public class ExampleEventAndRandom : MonoBehaviour
 
     void Awake()
     {
-        G.sys.test = this;
+        //G.sys.test = this;
 
         m_subscriberList.Add(new Event<TestInitializedEvent>.Subscriber(onTestInitializedEvent));
         m_subscriberList.Subscribe();
