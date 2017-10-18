@@ -39,6 +39,8 @@ public class CardManagerLogic : MonoBehaviour
         m_subscriberList.Add(new Event<FillCardsEvent>.Subscriber(onFillCards));
         m_subscriberList.Add(new Event<ShowBossSentensesEvent>.Subscriber(onBossSentensesShow));
         m_subscriberList.Add(new Event<HideSentensesAndCardsEvent>.Subscriber(onHideCardsAndSentenses));
+        m_subscriberList.Add(new Event<SelectCardEvent>.Subscriber(onSelectCard));
+        m_subscriberList.Add(new Event<SelectSentenseEvent>.Subscriber(onSelectSentense));
         m_subscriberList.Subscribe();
     }
 
@@ -87,7 +89,7 @@ public class CardManagerLogic : MonoBehaviour
         m_cardSelected = false;
         m_sentenseSelected = false;
 
-        hoverCard(0);
+        //hoverCard(0);
     }
 
     void showSentenses(List<string> sentenses)
@@ -213,6 +215,61 @@ public class CardManagerLogic : MonoBehaviour
 
         m_hoveredCardIndex = -1;
         m_hoveredSentenseIndex = -1;
+    }
+
+    void onSelectCard(SelectCardEvent e)
+    {
+        foreach(var c in m_cards)
+        {
+            if (c == e.card)
+                continue;
+            c.selected =false;
+        }
+
+        if (m_cardSelected && m_sentenseSelected)
+            return;
+
+        m_cardSelected = true;
+
+        if (m_cardSelected && m_sentenseSelected)
+            endRound();
+    }
+
+    void onSelectSentense(SelectSentenseEvent e)
+    {
+        foreach (var s in m_bossText)
+        {
+            if (s == e.sentense)
+                continue;
+            s.selected = false;
+        }
+
+        if (m_cardSelected && m_sentenseSelected)
+            return;
+
+        m_sentenseSelected = true;
+
+        if (m_cardSelected && m_sentenseSelected)
+            endRound();
+    }
+
+    void endRound()
+    {
+        int cardIndex = -1;
+        int sentenseIndex = -1;
+
+        for (int i = 0; i < m_cards.Count; i++)
+            if (m_cards[i].selected)
+                cardIndex = i;
+
+        for (int i = 0; i < m_bossText.Count; i++)
+            if (m_bossText[i].selected)
+                sentenseIndex = i;
+
+        if (cardIndex < 0 || sentenseIndex < 0)
+            return;
+
+        Event<CardAndSentenseSelectedEvent>.Broadcast(new CardAndSentenseSelectedEvent(m_cards[cardIndex].text, m_bossText[sentenseIndex].text, cardIndex, sentenseIndex));
     }
 
     private float heightFromIndex(int value, int max)

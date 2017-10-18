@@ -23,7 +23,7 @@ public class CardLogic : Interactable
         set
         {
             m_hovered = value;
-            if (m_outlineComp != null && m_selected == false)
+            if (m_outlineComp != null && !m_selected)
             {
                 m_outlineComp.enabled = value;
                 m_outlineComp.effectColor = hoveredColor;
@@ -42,16 +42,20 @@ public class CardLogic : Interactable
         }
     }
 
-    public void selected(bool value)
+    public bool selected
     {
-        m_selected = value;
-        if (m_outlineComp != null)
+        get { return m_selected; }
+        set
         {
-            m_outlineComp.enabled = value;
-            m_outlineComp.effectColor = selectedColor;
+            m_selected = value;
+            if (m_outlineComp != null)
+            {
+                m_outlineComp.enabled = value;
+                m_outlineComp.effectColor = selectedColor;
+            }
+            if (m_selected)
+                Event<SelectCardEvent>.Broadcast(new SelectCardEvent(this));
         }
-
-        Event<SelectCardEvent>.Broadcast(new SelectCardEvent(this));
     }
 
     public string description
@@ -72,7 +76,7 @@ public class CardLogic : Interactable
 
     public override void select()
     {
-        selected(true);
+        selected = true;
     }
 
     void Awake()

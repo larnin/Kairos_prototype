@@ -10,5 +10,5 @@ public class SelectCardEvent : EventArgs
         card = _card;
     }
 
-    CardLogic card;
+    public CardLogic card;
 }

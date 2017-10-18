@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114483251801703760}
   - component: {fileID: 114648990932558616}
   - component: {fileID: 114058803702453842}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: BossText
   m_TagString: Untagged
   m_Icon: {fileID: 0}

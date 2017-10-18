@@ -5,15 +5,17 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossTextLogic : MonoBehaviour
+public class BossTextLogic : Interactable
 {
     [SerializeField] string m_text = "Name";
 
-    Color m_selectedColor = new Color(1, 0.5f, 0);
+    Color m_hoveredColor = new Color(1, 0.5f, 0);
     Color m_basicColor = new Color(1, 1, 1);
+    Color m_selectedColor = new Color(0, 1, 0);
 
     bool m_hovered = false;
     Text m_textComp = null;
+    bool m_selected = false;
 
     public bool hovered
     {
@@ -21,8 +23,24 @@ public class BossTextLogic : MonoBehaviour
         set
         {
             m_hovered = value;
+            if (m_textComp != null && !m_selected)
+            {
+                m_textComp.color = value ? m_hoveredColor : m_basicColor;
+            }
+        }
+    }
+
+    public bool selected
+    {
+        get { return m_selected; }
+        set
+        {
+            m_selected = value;
             if (m_textComp != null)
-                m_textComp.color = value ? m_selectedColor : m_basicColor;
+                m_textComp.color = m_selected ? m_selectedColor : hovered ? m_hoveredColor : m_basicColor ;
+
+            if(m_selected)
+                Event<SelectSentenseEvent>.Broadcast(new SelectSentenseEvent(this));
         }
     }
 
@@ -35,6 +53,21 @@ public class BossTextLogic : MonoBehaviour
             if (m_textComp != null)
                 m_textComp.text = m_text;
         }
+    }
+
+    public override void hoverEnter()
+    {
+        hovered = true;
+    }
+
+    public override void hoverExit()
+    {
+        hovered = false;
+    }
+
+    public override void select()
+    {
+        selected = true;
     }
 
     void Awake()
