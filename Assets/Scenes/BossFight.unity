@@ -29081,7 +29081,6 @@ RectTransform:
   - {fileID: 37100025}
   - {fileID: 540549761}
   - {fileID: 1733874322}
-  - {fileID: 1646984569}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -43114,7 +43113,7 @@ Prefab:
     - target: {fileID: 114965524727942694, guid: 643e6645a6d797845aecd3bcc5e76124,
         type: 2}
       propertyPath: m_stages.Array.data[0].rounds.Array.data[0].sentenses.Array.size
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4261242973877816, guid: 643e6645a6d797845aecd3bcc5e76124, type: 2}
       propertyPath: m_LocalPosition.x

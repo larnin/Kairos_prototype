@@ -79,7 +79,7 @@ MonoBehaviour:
   m_cardOffset: 200
   m_maxSentensesWidth: 900
   m_maxSentensesHeight: 300
-  m_sentensesOffset: 750
+  m_sentensesOffset: 700
 --- !u!114 &114143045297548874
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using NRand;
 
 public class CardManagerLogic : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class CardManagerLogic : MonoBehaviour
     int m_hoveredSentenseIndex = -1;
     bool m_cardSelected = false;
     bool m_sentenseSelected = false;
+
+    uint m_currentTry = 1;
 
     SubscriberList m_subscriberList = new SubscriberList();
 
@@ -65,6 +68,7 @@ public class CardManagerLogic : MonoBehaviour
 
     void showCards(List<CardData> cards)
     {
+        m_currentTry++;
         foreach (var c in m_cards)
             Destroy(c.gameObject);
         m_cards.Clear();
@@ -280,7 +284,24 @@ public class CardManagerLogic : MonoBehaviour
 
     private float heightFromIndex(int value, int max)
     {
-        bool maxpair = max % 2 == 0;
+        List<int> indexs = new List<int>();
+        for (int i = 0; i < max; i++)
+            indexs.Add(i);
+
+        MT19937 rand = new MT19937(m_currentTry);
+        UniformIntDistribution distrib = new UniformIntDistribution(0, max-1);
+
+        for(int i = 0; i < max ; i++)
+        {
+            var a = distrib.Next(rand);
+            var temp = indexs[a];
+            indexs[a] = indexs[i];
+            indexs[i] = temp;
+        }
+
+        return indexs[value] / (float)max * m_maxSentensesHeight;
+
+        /*bool maxpair = max % 2 == 0;
         bool valueMoreThanHalfMax = false;
         value++;
         if (maxpair)
@@ -296,10 +317,10 @@ public class CardManagerLogic : MonoBehaviour
 
         float valueNormalized = 1 - ((float)value / halfMax);
         if (valueMoreThanHalfMax)
-            valueNormalized -= 1f / (2 * max);
+            valueNormalized -= 1f / max;
 
         float sign = (value % 2) == 0 ? -1f : 1f;
 
-        return sign * valueNormalized * m_maxSentensesHeight / 2;
+        return sign * valueNormalized * m_maxSentensesHeight / 2;*/
     }
 }
