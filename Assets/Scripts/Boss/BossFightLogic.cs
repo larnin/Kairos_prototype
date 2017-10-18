@@ -28,8 +28,14 @@ class BossFightLogic : MonoBehaviour
         m_subscriberList.Subscribe();
 
         foreach (var s in m_stages)
+        {
             foreach (var r in s.rounds)
+            {
                 m_bossLife++;
+                for(int i = 0; i < r.sentenses.Count; i++)
+                    r.sentenses[i] = r.sentenses[i].Replace("\\n", "\n");
+            }
+        }
     }
 
     private void Start()

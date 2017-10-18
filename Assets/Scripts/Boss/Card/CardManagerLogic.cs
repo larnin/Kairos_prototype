@@ -41,6 +41,7 @@ public class CardManagerLogic : MonoBehaviour
         m_subscriberList.Add(new Event<HideSentensesAndCardsEvent>.Subscriber(onHideCardsAndSentenses));
         m_subscriberList.Add(new Event<SelectCardEvent>.Subscriber(onSelectCard));
         m_subscriberList.Add(new Event<SelectSentenseEvent>.Subscriber(onSelectSentense));
+        m_subscriberList.Add(new Event<ShowCardDescriptionEvent>.Subscriber(onShowDescription));
         m_subscriberList.Subscribe();
     }
 
@@ -253,6 +254,11 @@ public class CardManagerLogic : MonoBehaviour
             endRound();
     }
 
+    void onShowDescription(ShowCardDescriptionEvent e)
+    {
+        m_descriptionComp.text = e.description;
+    }
+
     void endRound()
     {
         int cardIndex = -1;
@@ -282,14 +288,14 @@ public class CardManagerLogic : MonoBehaviour
 
         int halfMax = max / 2 + 1;
 
-        if (value > halfMax)
+        if (value >= halfMax)
         {
             valueMoreThanHalfMax = true;
-            value = max - value;
+            value = value - halfMax;
         }
 
-        float valueNormalized = 1 - (value / halfMax);
-        if (!maxpair && valueMoreThanHalfMax)
+        float valueNormalized = 1 - ((float)value / halfMax);
+        if (valueMoreThanHalfMax)
             valueNormalized -= 1f / (2 * max);
 
         float sign = (value % 2) == 0 ? -1f : 1f;

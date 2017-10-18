@@ -9,8 +9,8 @@ public class CardLogic : Interactable
     [Tooltip("Showed when the card is selected")]
     [SerializeField] string m_description = "";
 
-    Color selectedColor = new Color(0, 1, 0);
-    Color hoveredColor = new Color(1, 0.5f, 0);
+    [SerializeField] Color selectedColor = new Color(0, 1, 0);
+    [SerializeField] Color hoveredColor = new Color(1, 0.5f, 0);
 
     bool m_hovered = false;
     bool m_selected = false;
@@ -67,11 +67,13 @@ public class CardLogic : Interactable
     public override void hoverEnter()
     {
         hovered = true;
+        Event<ShowCardDescriptionEvent>.Broadcast(new ShowCardDescriptionEvent(m_description));
     }
 
     public override void hoverExit()
     {
         hovered = false;
+        Event<ShowCardDescriptionEvent>.Broadcast(new ShowCardDescriptionEvent(""));
     }
 
     public override void select()

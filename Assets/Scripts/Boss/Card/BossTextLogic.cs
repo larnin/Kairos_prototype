@@ -9,9 +9,9 @@ public class BossTextLogic : Interactable
 {
     [SerializeField] string m_text = "Name";
 
-    Color m_hoveredColor = new Color(1, 0.5f, 0);
-    Color m_basicColor = new Color(1, 1, 1);
-    Color m_selectedColor = new Color(0, 1, 0);
+    [SerializeField] Color m_hoveredColor = new Color(1, 0.5f, 0);
+    [SerializeField] Color m_basicColor = new Color(1, 1, 1);
+    [SerializeField] Color m_selectedColor = new Color(0, 1, 0);
 
     bool m_hovered = false;
     Text m_textComp = null;

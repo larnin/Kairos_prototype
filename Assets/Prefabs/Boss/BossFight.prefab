@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d5cc1109e31a04ba814a3422ea3c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_UI: {fileID: 0}
   m_stages:
   - cards:
     - name: Peche
@@ -70,6 +71,7 @@ MonoBehaviour:
       - Un fruit jaune et long
       - Le president des etats unis
       - Un doux kiwi
+      - Une 6e phrase
       rightSentenseindex: 2
       rightCardName: Banane
     - sentenses:

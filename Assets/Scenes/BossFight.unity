@@ -43110,6 +43110,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114965524727942694, guid: 643e6645a6d797845aecd3bcc5e76124,
+        type: 2}
+      propertyPath: m_stages.Array.data[0].rounds.Array.data[0].sentenses.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4261242973877816, guid: 643e6645a6d797845aecd3bcc5e76124, type: 2}
       propertyPath: m_LocalPosition.x
       value: 630.088
@@ -43151,6 +43156,16 @@ Prefab:
         type: 2}
       propertyPath: m_playerLife
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114965524727942694, guid: 643e6645a6d797845aecd3bcc5e76124,
+        type: 2}
+      propertyPath: m_stages.Array.data[0].rounds.Array.data[0].sentenses.Array.data[6]
+      value: Un 7e truc
+      objectReference: {fileID: 0}
+    - target: {fileID: 114965524727942694, guid: 643e6645a6d797845aecd3bcc5e76124,
+        type: 2}
+      propertyPath: m_stages.Array.data[0].rounds.Array.data[0].sentenses.Array.data[5]
+      value: Une 6e phrase
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 643e6645a6d797845aecd3bcc5e76124, type: 2}
