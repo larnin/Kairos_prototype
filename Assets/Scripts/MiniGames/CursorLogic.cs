@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CursorLogic : MonoBehaviour
 {
+    public Camera m_camera;
+
     [SerializeField]
     private float m_speed = 1000f;
     [SerializeField]
@@ -15,7 +17,6 @@ public class CursorLogic : MonoBehaviour
     private Color m_highlightColor;
     private Color m_baseColor;
     
-    private Camera m_camera;
     private const float m_rayDistance = 100.0f;
     private GameObject m_currentObjecthighlighted = null;
 
@@ -23,10 +24,9 @@ public class CursorLogic : MonoBehaviour
     private const string m_VerticalInputName = "Vertical";
     private const string m_CursorClickInputName = "CursorClickButton";
 
-    // Use this for initialization
-    void Start()
+    void OnEnable()
     {
-        m_camera = Camera.main;
+        m_camera = G.sys.currentCamera;
     }
 
     // Update is called once per frame

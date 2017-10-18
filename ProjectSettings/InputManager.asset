@@ -294,7 +294,7 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: CursorHorizontal
+    m_Name: CameraHorizontal
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: left
@@ -310,7 +310,7 @@ InputManager:
     axis: 3
     joyNum: 0
   - serializedVersion: 3
-    m_Name: CursorVertical
+    m_Name: CameraVertical
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: left
