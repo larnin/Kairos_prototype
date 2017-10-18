@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 
 class BossFightLogic : MonoBehaviour
 {
+    [SerializeField] GameObject m_UI;
     [SerializeField] List<Stage> m_stages;
     [SerializeField] int m_playerLife = 5;
     [SerializeField] int m_timerTime = 5;
@@ -32,12 +34,27 @@ class BossFightLogic : MonoBehaviour
 
     private void Start()
     {
+        m_UI.SetActive(false);
+
+        StartCoroutine(awakeCoroutine());
+    }
+
+    private IEnumerator awakeCoroutine()
+    {
+        yield return new WaitForSeconds(1);
+
+        G.sys.trailerManager.ApparitionDemon();
+
+        yield return new WaitForSeconds(7);
+
+        m_UI.SetActive(true);
         Event<UpdateBossUIEvent>.Broadcast(new UpdateBossUIEvent(m_playerLife, m_bossLife));
 
-        if (m_stages.Count == 0)
-            return;
-
-        DOVirtual.DelayedCall(1,startCurrentRound);
+        if (m_stages.Count != 0)
+        {
+            yield return new WaitForSeconds(1);
+            startCurrentRound();
+        }
     }
 
     private void OnDestroy()
@@ -73,6 +90,7 @@ class BossFightLogic : MonoBehaviour
         }
         else
         {
+            G.sys.trailerManager.MonstreFrappe();
             m_playerLife--;
         }
 

@@ -25,12 +25,16 @@ public class PowFeedbackLogic : MonoBehaviour
     {
         m_powBackImage = transform.Find("Pow").GetComponent<Image>();
         m_powText = transform.Find("PowText").GetComponent<Text>();
-        gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        //gameObject.SetActive(false);
     }
 
     public void show(FeedbackType type, float time)
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(true); 
 
         m_powText.text = textFromFeedbackType(type);
         m_powBackImage.color = type == FeedbackType.RIGHT ? rightColor : falseColor;
