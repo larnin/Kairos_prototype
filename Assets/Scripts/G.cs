@@ -7,6 +7,10 @@ public sealed class G
     private Inventory m_inventory = new Inventory();
     private TrailerManager m_trailerManager;
 
+    
+    public Camera currentCamera;
+    public Camera lastCameraUsed = null;
+    
     public static G sys
     {
         get
@@ -32,4 +36,26 @@ public sealed class G
             m_trailerManager = value;
         }
     }
+
+    public void SetActiveCamera(Camera camera)
+    {
+        if(currentCamera)
+        { 
+            currentCamera.enabled = false;
+        }
+        lastCameraUsed = currentCamera;
+        camera.enabled = true;
+        currentCamera = camera;
+        
+    }
+
+    public void ResetActiveCamera()
+    {
+        currentCamera.enabled = false;
+        lastCameraUsed.enabled = true;
+        Camera temp = currentCamera;
+        currentCamera = lastCameraUsed;
+        lastCameraUsed = temp;
+    }
+
 }

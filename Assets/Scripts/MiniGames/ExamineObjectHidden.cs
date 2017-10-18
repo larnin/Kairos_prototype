@@ -12,14 +12,14 @@ public class ExamineObjectHidden : MonoBehaviour
     [SerializeField]
     private GameObject m_cursor;
     [SerializeField]
+    private GameObject m_triggerZone;
+    [SerializeField]
     private GameObject m_UIDescriptiveText;
     [SerializeField]
     private GameObject m_UIDescriptiveAcceptButton;
     [SerializeField]
     private GameObject m_UIDescriptiveCancelButton;
-
-
-
+    
     private bool m_isObjectMovingToSnapPoint = false;
     private SubscriberList m_subscriberList = new SubscriberList();
     private Transform m_examinedObjectTransform = null; 
@@ -29,18 +29,44 @@ public class ExamineObjectHidden : MonoBehaviour
     private Quaternion m_objectBaseRotation;
 
     private Camera m_camera;
+    public Camera getCamera()
+    {
+        return m_camera;
+    }
 
     private const string m_horizontalInputName = "Horizontal";
     private const string m_VerticalInputName = "Vertical";
     private const string m_CancelInputName = "Cancel";
     private const string m_AcceptInputName = "CursorClickButton";
 
+     
 
     void Awake ()
     {
         m_subscriberList.Add(new Event<SelectHidenObjectEvent>.Subscriber(onObjectSelect));
         m_subscriberList.Subscribe();
         gameObject.SetActive(false);
+    }
+
+    public void StartMiniGame()
+    {
+        m_camera = transform.parent.GetComponent<Camera>();
+        m_camera.gameObject.SetActive(true);
+        G.sys.SetActiveCamera(m_camera);
+
+        m_UIDescriptiveAcceptButton.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Selectionner un objet";
+        m_UIDescriptiveCancelButton.SetActive(true);
+        m_cursor.SetActive(true);
+
+    }
+
+    public void StopMiniGame()
+    {
+        m_UIDescriptiveAcceptButton.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Fouiller le tiroir";
+        m_UIDescriptiveCancelButton.SetActive(false);
+        m_cursor.SetActive(false);
+        m_triggerZone.SetActive(true);
+        G.sys.ResetActiveCamera();
     }
 
     void OnDestroy()
@@ -98,8 +124,6 @@ public class ExamineObjectHidden : MonoBehaviour
 
     void onObjectSelect(SelectHidenObjectEvent e)
     {
-        m_camera = Camera.current;
-
         m_isObjectMovingToSnapPoint = true;
         m_cursor.SetActive(false);
         m_examinedObjectTransform = e.hiddenObject.transform;

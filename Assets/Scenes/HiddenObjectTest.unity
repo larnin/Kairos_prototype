@@ -379,6 +379,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114722158769723288, guid: ff5605ddf788b1942abab973985e7171,
+        type: 2}
+      propertyPath: m_camera
+      value: 
+      objectReference: {fileID: 1291154037}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff5605ddf788b1942abab973985e7171, type: 2}
   m_IsPrefabParent: 0
@@ -735,6 +740,10 @@ Prefab:
       propertyPath: m_UIDescriptiveAcceptButton
       value: 
       objectReference: {fileID: 1384008324}
+    - target: {fileID: 1015811879670564, guid: 73c8ee6f836775040af5f932b8d174d6, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 73c8ee6f836775040af5f932b8d174d6, type: 2}
   m_IsPrefabParent: 0
@@ -800,6 +809,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1291154037 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 20081823255059594, guid: 73c8ee6f836775040af5f932b8d174d6,
+    type: 2}
+  m_PrefabInternal: {fileID: 1056229296}
 --- !u!1001 &1292241932
 Prefab:
   m_ObjectHideFlags: 0

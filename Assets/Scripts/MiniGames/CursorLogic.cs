@@ -22,19 +22,27 @@ public class CursorLogic : MonoBehaviour
 
     private Camera m_camera;
 
-    private void Awake()
+    private void Start()
     {
-        m_camera = Camera.main;
+        m_camera = G.sys.currentCamera;
+        if (m_camera == null)
+            m_camera = Camera.main;
     }
     
     void Update()
     {
         moveCursor();
 
+        
+
+        
         List<RaycastResult> raycastResults = new List<RaycastResult>();
-        PointerEventData ped = new PointerEventData(EventSystem.current);
-        ped.position = transform.position;
-        EventSystem.current.RaycastAll(ped, raycastResults);
+        if(EventSystem.current != null)
+        {
+            PointerEventData ped = new PointerEventData(EventSystem.current);
+            ped.position = transform.position;
+            EventSystem.current.RaycastAll(ped, raycastResults);
+        }
 
         if (raycastResults.Count != 0)
             onRaycastUI(raycastResults);
@@ -105,4 +113,4 @@ public class CursorLogic : MonoBehaviour
             m_hoveredInteractable = interactable;
         }
     }
-}
+}
