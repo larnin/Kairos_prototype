@@ -43,7 +43,7 @@ public class ExamineObjectHidden : MonoBehaviour
 
     void Awake ()
     {
-        m_subscriberList.Add(new Event<CursorClickEvent>.Subscriber(onCursorClickEvent));
+        m_subscriberList.Add(new Event<SelectHidenObjectEvent>.Subscriber(onObjectSelect));
         m_subscriberList.Subscribe();
         gameObject.SetActive(false);
     }
@@ -119,17 +119,16 @@ public class ExamineObjectHidden : MonoBehaviour
                     Event<CardObtainedEvent>.Broadcast(new CardObtainedEvent(m_hiddenObjectDescription.m_CardName, m_hiddenObjectDescription.m_specialDescription));
                 }
             }
-
         }
     }
 
-    void onCursorClickEvent(CursorClickEvent cursorClickEvent)
+    void onObjectSelect(SelectHidenObjectEvent e)
     {
         m_isObjectMovingToSnapPoint = true;
         m_cursor.SetActive(false);
-        m_examinedObjectTransform = cursorClickEvent.gameObject.transform;
-        m_hiddenObjectDescription = m_examinedObjectTransform.GetComponent<HiddenObjectDescription>();
-        
+        m_examinedObjectTransform = e.hiddenObject.transform;
+        m_hiddenObjectDescription = e.hiddenObject;
+
         m_objectBasePosition = m_examinedObjectTransform.position;
         m_objectBaseRotation = m_examinedObjectTransform.rotation;
         m_examinedObjectTransform.parent = transform;
@@ -167,8 +166,8 @@ public class ExamineObjectHidden : MonoBehaviour
         m_examinedObjectTransform.parent = null;
         gameObject.SetActive(false);
         m_cursor.SetActive(true);
-        m_cursor.GetComponent<CursorLogic>().highlightObject(true);
         m_UIDescriptiveAcceptButton.SetActive(true);
         m_UIDescriptiveAcceptButton.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Selectionner un objet";
+        m_hiddenObjectDescription.hoverEnter();
     }
 }

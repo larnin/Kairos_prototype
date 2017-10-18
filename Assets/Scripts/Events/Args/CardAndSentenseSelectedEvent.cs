@@ -14,8 +14,8 @@ public class CardAndSentenseSelectedEvent : EventArgs
         sentenseIndex = _sentenseIndex;
     }
 
-    string cardName;
-    string bossSentense;
-    int cardIndex;
-    int sentenseIndex;
+    public string cardName;
+    public string bossSentense;
+    public int cardIndex;
+    public int sentenseIndex;
 }

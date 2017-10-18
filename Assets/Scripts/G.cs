@@ -5,6 +5,8 @@ public sealed class G
 {
     private static volatile G m_instance;
     private Inventory m_inventory = new Inventory();
+    private TrailerManager m_trailerManager;
+
     
     public Camera currentCamera;
     public Camera lastCameraUsed = null;
@@ -22,6 +24,17 @@ public sealed class G
     public Inventory inventory
     {
         get { return m_inventory; }
+    }
+
+    public TrailerManager trailerManager
+    {
+        get { return m_trailerManager; }
+        set
+        {
+            if (m_trailerManager != null)
+                Debug.LogError("2 TrailerManager instanciated !");
+            m_trailerManager = value;
+        }
     }
 
     public void SetActiveCamera(Camera camera)
