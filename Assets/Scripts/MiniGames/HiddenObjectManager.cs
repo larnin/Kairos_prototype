@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class HiddenObjectManager : MonoBehaviour {
 
-    public GameObject HiddenObjectGameToPlay;
+    public GameObject hiddenObjectGameToPlay;
+    private bool gameOn;
 
     public void play()
     {
-        HiddenObjectGameToPlay.GetComponent<ExamineObjectHidden>().StartMiniGame();
+        hiddenObjectGameToPlay.GetComponent<ExamineObjectHidden>().StartMiniGame();
+        gameOn = true;
     }
 
     public void exit()
     {
-        HiddenObjectGameToPlay.GetComponent<ExamineObjectHidden>().StopMiniGame();
+        hiddenObjectGameToPlay.GetComponent<ExamineObjectHidden>().StopMiniGame();
+        gameOn = false;
     }
 
     public void Update()
     {
-        if(Input.GetButtonDown("Cancel") && !HiddenObjectGameToPlay.activeInHierarchy)
+        if(Input.GetButtonDown("Cancel") && !hiddenObjectGameToPlay.activeInHierarchy && gameOn)
         {
             exit();
         }

@@ -29,6 +29,10 @@ public class ExamineObjectHidden : MonoBehaviour
     private Quaternion m_objectBaseRotation;
 
     private Camera m_camera;
+    public Camera getCamera()
+    {
+        return m_camera;
+    }
 
     private const string m_horizontalInputName = "Horizontal";
     private const string m_VerticalInputName = "Vertical";
