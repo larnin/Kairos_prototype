@@ -5,8 +5,6 @@ using UnityEngine.EventSystems;
 
 public class CursorLogic : MonoBehaviour
 {
-    public Camera m_camera;
-
     [SerializeField]
     private float m_speed = 1000f;
     [SerializeField]
@@ -20,20 +18,31 @@ public class CursorLogic : MonoBehaviour
     private const string m_VerticalInputName = "Vertical";
     private const string m_CursorClickInputName = "Fire1";
 
-    // Use this for initialization
-    void Start()
+    private Interactable m_hoveredInteractable = null;
+
+    private Camera m_camera;
+
+    private void Start()
     {
         m_camera = G.sys.currentCamera;
+        if (m_camera == null)
+            m_camera = Camera.main;
     }
     
     void Update()
     {
         moveCursor();
 
+        
+
+        
         List<RaycastResult> raycastResults = new List<RaycastResult>();
-        PointerEventData ped = new PointerEventData(EventSystem.current);
-        ped.position = transform.position;
-        EventSystem.current.RaycastAll(ped, raycastResults);
+        if(EventSystem.current != null)
+        {
+            PointerEventData ped = new PointerEventData(EventSystem.current);
+            ped.position = transform.position;
+            EventSystem.current.RaycastAll(ped, raycastResults);
+        }
 
         if (raycastResults.Count != 0)
             onRaycastUI(raycastResults);
@@ -104,10 +113,4 @@ public class CursorLogic : MonoBehaviour
             m_hoveredInteractable = interactable;
         }
     }
-}
-
-    private Interactable m_hoveredInteractable = null;
-
-    private Camera m_camera;
-
-    private void Awake()
+}
