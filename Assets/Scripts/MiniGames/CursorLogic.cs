@@ -48,6 +48,7 @@ public class CursorLogic : MonoBehaviour
             onRaycastUI(raycastResults);
         else
         {
+			Debug.Log(m_camera.gameObject.name);
             Ray ray = m_camera.ScreenPointToRay(transform.position);
             RaycastHit HitInfo;
             if (Physics.Raycast(ray, out HitInfo, m_rayDistance, m_layerMask))
